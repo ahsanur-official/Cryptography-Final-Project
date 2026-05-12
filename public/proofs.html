@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Proof Dashboard - Crypto Chat</title>
+  <link rel="stylesheet" href="/style.css" />
+  <style>
+    .proofs-wrapper {
+      min-height: calc(100vh - 70px);
+      background: var(--bg-2);
+      padding: 40px 20px;
+    }
+
+    .proofs-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .proofs-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+
+    .proofs-header h1 {
+      margin: 0;
+      font-size: 2rem;
+      background: linear-gradient(135deg, var(--cyan), var(--pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .proofs-controls {
+      display: flex;
+      gap: 12px;
+    }
+
+    .filter-btn {
+      padding: 10px 16px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .filter-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: var(--cyan);
+    }
+
+    .filter-btn.active {
+      background: rgba(53, 208, 255, 0.2);
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    .proofs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 20px;
+    }
+
+    .proof-card {
+      border: 1px solid var(--line);
+      background: var(--card);
+      backdrop-filter: blur(22px);
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      animation: slideIn 0.3s ease;
+    }
+
+    .proof-card.send {
+      border-left: 4px solid var(--cyan);
+    }
+
+    .proof-card.receive {
+      border-left: 4px solid var(--green);
+    }
+
+    .proof-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .proof-badge.send {
+      background: rgba(53, 208, 255, 0.2);
+      color: var(--cyan);
+    }
+
+    .proof-badge.receive {
+      background: rgba(66, 225, 138, 0.2);
+      color: var(--green);
+    }
+
+    .proof-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+
+    .proof-details {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .proof-detail {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--line);
+      font-size: 0.9rem;
+    }
+
+    .proof-detail strong {
+      color: var(--text);
+    }
+
+    .proof-detail span {
+      color: var(--muted);
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .proof-verification {
+      background: rgba(66, 225, 138, 0.12);
+      border: 1px solid rgba(66, 225, 138, 0.3);
+      border-radius: 10px;
+      padding: 12px;
+      margin-top: 12px;
+      font-size: 0.9rem;
+    }
+
+    .proof-verification.failed {
+      background: rgba(255, 107, 107, 0.12);
+      border-color: rgba(255, 107, 107, 0.3);
+    }
+
+    .verification-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 4px 0;
+    }
+
+    .verification-item.passed .status-icon {
+      color: var(--green);
+    }
+
+    .verification-item.failed .status-icon {
+      color: var(--red);
+    }
+
+    .status-icon {
+      font-weight: 700;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+    }
+
+    .empty-state-icon {
+      font-size: 4rem;
+      margin-bottom: 16px;
+    }
+
+    .empty-state h2 {
+      margin: 0 0 8px 0;
+      color: var(--text);
+    }
+
+    @media (max-width: 768px) {
+      .proofs-wrapper {
+        padding: 20px 12px;
+      }
+
+      .proofs-header {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+      }
+
+      .proofs-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <div class="proofs-wrapper">
+    <div class="proofs-container">
+      <div class="proofs-header">
+        <h1>🔍 Encryption Proofs</h1>
+        <div class="proofs-controls">
+          <button class="filter-btn active" onclick="filterProofs('all')">All</button>
+          <button class="filter-btn" onclick="filterProofs('send')">Sent</button>
+          <button class="filter-btn" onclick="filterProofs('receive')">Received</button>
+          <button class="btn btn-primary" onclick="refreshProofs()" style="padding: 10px 16px; font-size: 0.9rem;">Refresh</button>
+        </div>
+      </div>
+
+      <div class="proofs-grid" id="proofsGrid">
+        <div class="empty-state">
+          <div class="empty-state-icon">📊</div>
+          <h2>No proofs yet</h2>
+          <p>Send or receive encrypted messages to see proofs of encryption/decryption</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/navbar.js"></script>
+  <script src="/main.js"></script>
+  <script src="/proofs-page.js"></script>
+</body>
+</html>

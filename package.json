@@ -1,0 +1,23 @@
+{
+  "name": "secure-realtime-messaging",
+  "version": "0.1.0",
+  "description": "Secure real-time messaging demo for Cryptography course (Node.js + Socket.io + Firebase)",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "firebase-admin": "^13.9.0",
+    "jsonwebtoken": "^9.0.0",
+    "socket.io": "^4.7.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}

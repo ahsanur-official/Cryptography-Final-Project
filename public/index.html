@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crypto Chat - Secure Encrypted Messaging</title>
+  <link rel="stylesheet" href="/style.css" />
+  <style>
+    .homepage {
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 100%);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hero-section {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    .hero-content {
+      max-width: 700px;
+      animation: slideIn 0.6s ease;
+    }
+
+    .hero-icon {
+      font-size: 5rem;
+      margin-bottom: 24px;
+      animation: bounce 2s infinite;
+    }
+
+    .hero-title {
+      font-size: 3.5rem;
+      font-weight: 900;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, var(--cyan), var(--pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.2;
+    }
+
+    .hero-subtitle {
+      font-size: 1.3rem;
+      color: var(--muted);
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-bottom: 60px;
+      flex-wrap: wrap;
+    }
+
+    .btn-hero {
+      padding: 16px 32px;
+      border-radius: 14px;
+      border: none;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-width: 160px;
+    }
+
+    .btn-primary-hero {
+      background: linear-gradient(135deg, var(--cyan), var(--pink));
+      color: var(--bg-1);
+    }
+
+    .btn-primary-hero:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 24px rgba(53, 208, 255, 0.4);
+    }
+
+    .btn-secondary-hero {
+      background: rgba(255, 255, 255, 0.12);
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+
+    .btn-secondary-hero:hover {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: var(--cyan);
+    }
+
+    .features-section {
+      padding: 80px 20px;
+      background: rgba(0, 0, 0, 0.3);
+      border-top: 1px solid var(--line);
+    }
+
+    .features-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 900;
+      text-align: center;
+      margin-bottom: 60px;
+      background: linear-gradient(135deg, var(--cyan), var(--pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 32px;
+    }
+
+    .feature-card {
+      border: 1px solid var(--line);
+      background: var(--card);
+      backdrop-filter: blur(22px);
+      border-radius: 18px;
+      padding: 32px 24px;
+      text-align: center;
+      transition: all 0.3s ease;
+      animation: slideIn 0.6s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--cyan);
+      box-shadow: 0 12px 32px rgba(53, 208, 255, 0.15);
+    }
+
+    .feature-icon {
+      font-size: 3rem;
+      margin-bottom: 16px;
+    }
+
+    .feature-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+
+    .feature-description {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .security-section {
+      padding: 80px 20px;
+      background: rgba(53, 208, 255, 0.05);
+      border-top: 1px solid var(--line);
+    }
+
+    .security-container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .security-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+      margin-top: 40px;
+    }
+
+    .security-item {
+      text-align: center;
+      padding: 24px;
+    }
+
+    .security-icon {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+    }
+
+    .security-name {
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .security-spec {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .cta-section {
+      padding: 80px 20px;
+      text-align: center;
+    }
+
+    .cta-box {
+      border: 2px solid var(--cyan);
+      background: rgba(53, 208, 255, 0.1);
+      border-radius: 18px;
+      padding: 60px 40px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .cta-title {
+      font-size: 2rem;
+      font-weight: 900;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, var(--cyan), var(--pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .cta-description {
+      color: var(--muted);
+      margin-bottom: 32px;
+      font-size: 1.05rem;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 32px 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 2.5rem;
+      }
+
+      .hero-subtitle {
+        font-size: 1.1rem;
+      }
+
+      .hero-buttons {
+        flex-direction: column;
+      }
+
+      .btn-hero {
+        width: 100%;
+      }
+
+      .section-title {
+        font-size: 2rem;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .cta-box {
+        padding: 40px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <div class="hero-icon">🔐</div>
+      <h1 class="hero-title">Secure Encrypted Messaging</h1>
+      <p class="hero-subtitle">
+        End-to-end encrypted chat with military-grade cryptography.
+        Your messages are yours alone.
+      </p>
+      <div class="hero-buttons">
+        <button class="btn-hero btn-primary-hero" onclick="window.location.href='/login.html'">Sign In</button>
+        <button class="btn-hero btn-secondary-hero" onclick="window.location.href='/register.html'">Create Account</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section">
+    <div class="features-container">
+      <h2 class="section-title">Why Crypto Chat?</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🔒</div>
+          <div class="feature-title">End-to-End Encrypted</div>
+          <div class="feature-description">
+            All messages are encrypted with AES-256-GCM. Only you and the recipient can read them.
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🔑</div>
+          <div class="feature-title">Digital Signatures</div>
+          <div class="feature-description">
+            Every message is signed with RSA-2048 to prove authenticity and prevent tampering.
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <div class="feature-title">Real-Time Messaging</div>
+          <div class="feature-description">
+            Instant message delivery with WebSocket technology. Chat like WhatsApp or Telegram.
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📱</div>
+          <div class="feature-title">Cross-Device</div>
+          <div class="feature-description">
+            Access your chats from any device. Secure encryption works everywhere.
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🔍</div>
+          <div class="feature-title">Proof of Encryption</div>
+          <div class="feature-description">
+            View detailed proofs of encryption, decryption, and hash verification for every message.
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">✓</div>
+          <div class="feature-title">Open Standards</div>
+          <div class="feature-description">
+            Built on Web Crypto API using industry-standard cryptographic algorithms.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Security Section -->
+  <section class="security-section">
+    <div class="security-container">
+      <h2 class="section-title">Military-Grade Encryption</h2>
+      <div class="security-grid">
+        <div class="security-item">
+          <div class="security-icon">🔐</div>
+          <div class="security-name">AES-256-GCM</div>
+          <div class="security-spec">Authenticated Encryption</div>
+        </div>
+
+        <div class="security-item">
+          <div class="security-icon">🔑</div>
+          <div class="security-name">RSA-2048</div>
+          <div class="security-spec">Asymmetric Encryption</div>
+        </div>
+
+        <div class="security-item">
+          <div class="security-icon">✍️</div>
+          <div class="security-name">RSA-PSS</div>
+          <div class="security-spec">Digital Signatures</div>
+        </div>
+
+        <div class="security-item">
+          <div class="security-icon">🔗</div>
+          <div class="security-name">SHA-256</div>
+          <div class="security-spec">Cryptographic Hash</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="cta-box">
+      <h2 class="cta-title">Ready to Chat Securely?</h2>
+      <p class="cta-description">Join thousands of users who trust Crypto Chat for secure communication.</p>
+      <div class="cta-buttons">
+        <button class="btn-hero btn-primary-hero" onclick="window.location.href='/register.html'">Get Started</button>
+        <button class="btn-hero btn-secondary-hero" onclick="window.location.href='/login.html'">Sign In</button>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2024 Crypto Chat. Built with security-first principles. All rights reserved.</p>
+  </footer>
+
+  <script src="/navbar.js"></script>
+  <script src="/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const navbarContainer = document.getElementById('navbar-container');
+      const navbarResponse = await fetch('/navbar.html');
+      navbarContainer.innerHTML = await navbarResponse.text();
+      initializeNavbar();
+      
+      // If already logged in, redirect to chat
+      const auth = JSON.parse(localStorage.getItem('auth_session') || 'null');
+      if (auth && auth.token) {
+        // Optionally redirect, or allow viewing homepage
+        // window.location.href = '/chat.html';
+      }
+    });
+  </script>
+</body>
+</html>

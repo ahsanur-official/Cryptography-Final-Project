@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chat - Crypto Chat</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <div class="chat-wrapper">
+    <aside class="chat-sidebar">
+      <div class="sidebar-header">
+        <h3 id="identityLabel">not signed in</h3>
+        <div class="status-pill status-green" id="connectionStatus">Online</div>
+      </div>
+      <div class="conversations-list" id="conversationsList">
+        <div class="empty-state">No conversations yet</div>
+      </div>
+      <div class="sidebar-footer">
+        <a href="/proofs.html" class="proof-link-small">📊 Proofs</a>
+      </div>
+    </aside>
+
+    <div class="chat-main">
+      <div class="chat-header">
+        <div>
+          <h2 id="chatWithLabel">Select a conversation</h2>
+          <p id="chatStatus" class="chat-status">Encrypted with AES-GCM + RSA-PSS</p>
+        </div>
+        <div class="status-pill status-blue">Secure</div>
+      </div>
+
+      <div class="chat-messages" id="messages"></div>
+
+      <div class="chat-input-area">
+        <div class="receiver-meta" id="keysStatus">Generating keys...</div>
+        <div class="message-input-group" style="margin-bottom: 12px;">
+          <input id="toUsername" placeholder="Type a username to chat..." class="message-textarea" style="flex: 0.3; padding: 11px 14px; min-height: 44px;" />
+        </div>
+        <div class="message-input-group">
+          <textarea id="message" placeholder="Type a secure message..." class="message-textarea"></textarea>
+          <button id="btnSend" class="btn btn-primary btn-send">Send</button>
+        </div>
+        <div class="info-card" id="senderPreview" style="margin-top: 8px; font-size: 0.85rem; display: none;"></div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .chat-wrapper {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 20px;
+      padding: 20px;
+      min-height: calc(100vh - 70px);
+      background: var(--bg-2);
+    }
+
+    @media (max-width: 1024px) {
+      .chat-wrapper {
+        grid-template-columns: 1fr;
+      }
+
+      .chat-sidebar {
+        max-height: 300px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .chat-wrapper {
+        padding: 12px;
+        gap: 12px;
+      }
+    }
+  </style>
+
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script src="/navbar.js"></script>
+  <script src="/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const navbarContainer = document.getElementById('navbar-container');
+      const navbarResponse = await fetch('/navbar.html');
+      navbarContainer.innerHTML = await navbarResponse.text();
+      initializeNavbar();
+      
+      const auth = JSON.parse(localStorage.getItem('auth_session') || 'null');
+      if (!auth || !auth.token) {
+        window.location.href = '/';
+        return;
+      }
+      
+      await initializeSession(auth);
+    });
+  </script>
+</body>
+</html>

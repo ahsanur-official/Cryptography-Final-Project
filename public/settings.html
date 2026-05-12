@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings - Crypto Chat</title>
+  <link rel="stylesheet" href="/style.css" />
+  <style>
+    .settings-wrapper {
+      min-height: calc(100vh - 70px);
+      background: var(--bg-2);
+      padding: 40px 20px;
+    }
+
+    .settings-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .settings-header {
+      margin-bottom: 32px;
+    }
+
+    .settings-header h1 {
+      margin: 0;
+      font-size: 2rem;
+      background: linear-gradient(135deg, var(--cyan), var(--pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .settings-grid {
+      display: grid;
+      gap: 20px;
+    }
+
+    .settings-panel {
+      border: 1px solid var(--line);
+      background: var(--card);
+      backdrop-filter: blur(22px);
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .panel-title span {
+      font-size: 1.5rem;
+    }
+
+    .setting-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .setting-item:last-child {
+      border-bottom: none;
+    }
+
+    .setting-info h3 {
+      margin: 0 0 4px 0;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    .setting-info p {
+      margin: 0;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .setting-control {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 50px;
+      height: 28px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .toggle-switch.active {
+      background: var(--green);
+      border-color: var(--green);
+    }
+
+    .toggle-switch::before {
+      content: '';
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      background: white;
+      border-radius: 12px;
+      top: 2px;
+      left: 2px;
+      transition: left 0.3s ease;
+    }
+
+    .toggle-switch.active::before {
+      left: 24px;
+    }
+
+    .btn-small {
+      padding: 8px 16px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-info {
+      background: rgba(53, 208, 255, 0.15);
+      color: var(--cyan);
+      border: 1px solid rgba(53, 208, 255, 0.3);
+    }
+
+    .btn-info:hover {
+      background: rgba(53, 208, 255, 0.25);
+    }
+
+    .btn-danger {
+      background: rgba(255, 107, 107, 0.15);
+      color: var(--red);
+      border: 1px solid rgba(255, 107, 107, 0.3);
+    }
+
+    .btn-danger:hover {
+      background: rgba(255, 107, 107, 0.25);
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--line);
+      margin: 20px 0;
+    }
+
+    .key-display {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px;
+      margin-top: 8px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.8rem;
+      color: var(--muted);
+      word-break: break-all;
+      max-height: 100px;
+      overflow-y: auto;
+    }
+
+    .status-info {
+      background: rgba(66, 225, 138, 0.12);
+      border: 1px solid rgba(66, 225, 138, 0.3);
+      border-radius: 10px;
+      padding: 16px;
+      margin: 16px 0;
+    }
+
+    .status-info strong {
+      color: var(--green);
+    }
+
+    @media (max-width: 768px) {
+      .settings-wrapper {
+        padding: 20px 12px;
+      }
+
+      .setting-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .setting-control {
+        width: 100%;
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <div class="settings-wrapper">
+    <div class="settings-container">
+      <div class="settings-header">
+        <h1>⚙️ Settings</h1>
+      </div>
+
+      <!-- Account Settings -->
+      <div class="settings-panel">
+        <div class="panel-title">
+          <span>👤</span>
+          Account Settings
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <h3>Username</h3>
+            <p id="settingsUsername" style="color: var(--cyan); font-weight: 600;">Not logged in</p>
+          </div>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <h3>Email Address</h3>
+            <p id="settingsEmail">No email set</p>
+          </div>
+          <button class="btn-small btn-info" onclick="editEmail()">Edit</button>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <h3>Full Name</h3>
+            <p id="settingsFullName">No name set</p>
+          </div>
+          <button class="btn-small btn-info" onclick="editFullName()">Edit</button>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <h3>Account Role</h3>
+            <p id="settingsRole">Not assigned</p>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <h3>Change Password</h3>
+            <p>Update your account password</p>
+          </div>
+          <button class="btn-small btn-info" onclick="changePassword()">Change</button>
+        </div>
+      </div>
+
+      <!-- Security Settings -->
+      <div class="settings-panel">
+        <div class="panel-title">
+          <span>🔐</span>
+          Security & Encryption
+        </div>
+
+        <div class="status-info">
+          ✓ All encryption happens locally in your browser. Your private keys never leave your device.
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <h3>RSA Signing Key (2048-bit)</h3>
+            <p>Used for message signatures</p>
+            <div class="key-display" id="rsaSigningKey">Loading...</div>
+          </div>
+          <button class="btn-small btn-info" onclick="downloadKeys()">Download</button>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <h3>RSA Encryption Key (2048-bit)</h3>
+            <p>Used for message encryption</p>
+            <div class="key-display" id="rsaEncryptionKey">Loading...</div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <h3>Clear Local Keys</h3>
+            <p>Remove all cryptographic keys from browser storage</p>
+          </div>
+          <button class="btn-small btn-danger" onclick="clearKeys()">Clear</button>
+        </div>
+      </div>
+
+      <!-- Privacy Settings -->
+      <div class="settings-panel">
+        <div class="panel-title">
+          <span>🔒</span>
+          Privacy Settings
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <h3>Store Messages Locally</h3>
+            <p>Save message history in browser storage</p>
+          </div>
+          <div class="setting-control">
+            <div class="toggle-switch active" onclick="toggleSetting(this)"></div>
+          </div>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <h3>Auto-lock on Inactivity</h3>
+            <p>Automatically logout after 30 minutes</p>
+          </div>
+          <div class="setting-control">
+            <div class="toggle-switch" onclick="toggleSetting(this)"></div>
+          </div>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <h3>Show Notifications</h3>
+            <p>Display toast notifications for events</p>
+          </div>
+          <div class="setting-control">
+            <div class="toggle-switch active" onclick="toggleSetting(this)"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- About -->
+      <div class="settings-panel">
+        <div class="panel-title">
+          <span>ℹ️</span>
+          About
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <h3>Application Version</h3>
+            <p>1.0.0</p>
+          </div>
+        </div>
+
+        <div class="setting-item">
+          <div class="setting-info">
+            <h3>Crypto Library</h3>
+            <p>Web Crypto API (Native Browser)</p>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="setting-item">
+          <button class="btn-small btn-danger" onclick="logout()">Logout</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/navbar.js"></script>
+  <script src="/main.js"></script>
+  <script src="/settings.js"></script>
+</body>
+</html>

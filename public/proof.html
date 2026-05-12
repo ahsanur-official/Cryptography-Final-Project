@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Proof Dashboard</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+    <div class="shell" style="grid-template-columns: 1fr; max-width: 1200px;">
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">Proof dashboard</p>
+            <h2>Stored encryption, decryption, and hashing evidence</h2>
+          </div>
+          <a class="proof-link" href="/">Back to chat</a>
+        </div>
+        <div class="receiver-meta" id="proofMeta">Loading proof records...</div>
+        <div class="proof-summary" id="proofList"></div>
+      </section>
+    </div>
+    <script src="/proof.js"></script>
+  </body>
+</html>

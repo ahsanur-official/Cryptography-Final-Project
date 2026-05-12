@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register - Crypto Chat</title>
+  <link rel="stylesheet" href="/style.css" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg-1);
+      color: var(--text);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .register-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .register-container {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      padding: 40px 20px;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .register-panel {
+      border: 1px solid var(--line);
+      background: var(--card);
+      backdrop-filter: blur(22px);
+      border-radius: 28px;
+      padding: 40px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .panel-header {
+      text-align: center;
+    }
+
+    .panel-icon {
+      font-size: 3rem;
+      margin-bottom: 16px;
+    }
+
+    .panel-header h2 {
+      margin: 0 0 8px 0;
+      font-size: 1.8rem;
+      background: linear-gradient(135deg, var(--cyan), var(--pink));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .panel-header p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group label {
+      font-weight: 600;
+      color: var(--text);
+      font-size: 0.9rem;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: rgba(53, 208, 255, 0.6);
+      box-shadow: 0 0 0 4px rgba(53, 208, 255, 0.14);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .strength-indicator {
+      display: flex;
+      gap: 4px;
+      margin-top: 4px;
+    }
+
+    .strength-bar {
+      flex: 1;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .strength-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--red);
+      transition: all 0.3s ease;
+    }
+
+    .strength-fill.weak {
+      width: 33%;
+      background: var(--red);
+    }
+
+    .strength-fill.medium {
+      width: 66%;
+      background: var(--yellow);
+    }
+
+    .strength-fill.strong {
+      width: 100%;
+      background: var(--green);
+    }
+
+    .strength-text {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+
+    .details-list {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .detail-item {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      font-size: 0.85rem;
+    }
+
+    .detail-item strong {
+      color: var(--cyan);
+      min-width: 100px;
+    }
+
+    .detail-item span {
+      color: var(--muted);
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--line);
+      margin: 8px 0;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 14px 18px;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.95rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--cyan), var(--pink));
+      color: #08111b;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(255, 107, 214, 0.25);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .info-banner {
+      background: rgba(53, 208, 255, 0.12);
+      border: 1px solid rgba(53, 208, 255, 0.3);
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 0.85rem;
+      color: var(--cyan);
+      margin-bottom: 12px;
+    }
+
+    @media (max-width: 1024px) {
+      .register-container {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .register-panel {
+        padding: 30px;
+      }
+
+      .panel-header h2 {
+        font-size: 1.5rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .register-container {
+        padding: 20px 16px;
+      }
+
+      .register-panel {
+        padding: 20px;
+      }
+
+      .panel-header h2 {
+        font-size: 1.3rem;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <main class="register-page">
+    <div class="register-container">
+      <!-- Sender Side -->
+      <div class="register-panel sender-register">
+        <div class="panel-header">
+          <div class="panel-icon">📤</div>
+          <h2>Sender Registration</h2>
+          <p>Create your sender account</p>
+        </div>
+
+        <div class="info-banner">
+          ✓ Your RSA-2048 keys will be generated securely in your browser
+        </div>
+
+        <div class="form-group">
+          <label for="senderUsername">Sender Username</label>
+          <input 
+            id="senderUsername" 
+            type="text" 
+            placeholder="e.g., alice_sender"
+            autocomplete="off"
+          />
+          <small style="color: var(--muted);">Choose a unique username for sending messages</small>
+        </div>
+
+        <div class="form-group">
+          <label for="senderPassword">Password</label>
+          <input 
+            id="senderPassword" 
+            type="password" 
+            placeholder="••••••••"
+            autocomplete="new-password"
+          />
+          <div class="strength-indicator">
+            <div class="strength-bar">
+              <div class="strength-fill" id="senderPasswordStrength"></div>
+            </div>
+          </div>
+          <div class="strength-text" id="senderStrengthText">Password strength: weak</div>
+          <small style="color: var(--muted);">Min 8 characters, mix uppercase, lowercase, numbers</small>
+        </div>
+
+        <div class="form-group">
+          <label for="senderEmail">Email Address</label>
+          <input 
+            id="senderEmail" 
+            type="email" 
+            placeholder="your@email.com"
+            autocomplete="email"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="senderFullName">Full Name</label>
+          <input 
+            id="senderFullName" 
+            type="text" 
+            placeholder="John Doe"
+            autocomplete="name"
+          />
+        </div>
+
+        <div class="details-list">
+          <strong style="color: var(--green);">🔐 Your Security Details:</strong>
+          <div class="divider"></div>
+          <div class="detail-item">
+            <strong>Encryption:</strong>
+            <span>AES-256-GCM</span>
+          </div>
+          <div class="detail-item">
+            <strong>Signing:</strong>
+            <span>RSA-2048-PSS</span>
+          </div>
+          <div class="detail-item">
+            <strong>Hash:</strong>
+            <span>SHA-256</span>
+          </div>
+          <div class="detail-item">
+            <strong>Key Storage:</strong>
+            <span>Browser LocalStorage</span>
+          </div>
+          <div class="detail-item">
+            <strong>Auth:</strong>
+            <span>JWT (7-day expiry)</span>
+          </div>
+        </div>
+
+        <div class="action-buttons">
+          <button class="btn btn-secondary" onclick="resetSenderForm()">Clear</button>
+          <button class="btn btn-primary" id="btnRegisterSender">Register Sender</button>
+        </div>
+      </div>
+
+      <!-- Receiver Side -->
+      <div class="register-panel receiver-register">
+        <div class="panel-header">
+          <div class="panel-icon">📥</div>
+          <h2>Receiver Registration</h2>
+          <p>Create your receiver account</p>
+        </div>
+
+        <div class="info-banner">
+          ✓ Receive and decrypt messages with your private RSA-2048 key
+        </div>
+
+        <div class="form-group">
+          <label for="receiverUsername">Receiver Username</label>
+          <input 
+            id="receiverUsername" 
+            type="text" 
+            placeholder="e.g., bob_receiver"
+            autocomplete="off"
+          />
+          <small style="color: var(--muted);">Choose a unique username for receiving messages</small>
+        </div>
+
+        <div class="form-group">
+          <label for="receiverPassword">Password</label>
+          <input 
+            id="receiverPassword" 
+            type="password" 
+            placeholder="••••••••"
+            autocomplete="new-password"
+          />
+          <div class="strength-indicator">
+            <div class="strength-bar">
+              <div class="strength-fill" id="receiverPasswordStrength"></div>
+            </div>
+          </div>
+          <div class="strength-text" id="receiverStrengthText">Password strength: weak</div>
+          <small style="color: var(--muted);">Min 8 characters, mix uppercase, lowercase, numbers</small>
+        </div>
+
+        <div class="form-group">
+          <label for="receiverEmail">Email Address</label>
+          <input 
+            id="receiverEmail" 
+            type="email" 
+            placeholder="your@email.com"
+            autocomplete="email"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="receiverFullName">Full Name</label>
+          <input 
+            id="receiverFullName" 
+            type="text" 
+            placeholder="Jane Smith"
+            autocomplete="name"
+          />
+        </div>
+
+        <div class="details-list">
+          <strong style="color: var(--cyan);">🔑 Your Security Details:</strong>
+          <div class="divider"></div>
+          <div class="detail-item">
+            <strong>Decryption:</strong>
+            <span>AES-256-GCM</span>
+          </div>
+          <div class="detail-item">
+            <strong>Verification:</strong>
+            <span>RSA-2048-PSS</span>
+          </div>
+          <div class="detail-item">
+            <strong>Hash Check:</strong>
+            <span>SHA-256</span>
+          </div>
+          <div class="detail-item">
+            <strong>Key Storage:</strong>
+            <span>Browser LocalStorage</span>
+          </div>
+          <div class="detail-item">
+            <strong>Auth:</strong>
+            <span>JWT (7-day expiry)</span>
+          </div>
+        </div>
+
+        <div class="action-buttons">
+          <button class="btn btn-secondary" onclick="resetReceiverForm()">Clear</button>
+          <button class="btn btn-primary" id="btnRegisterReceiver">Register Receiver</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script src="/navbar.js"></script>
+  <script src="/main.js"></script>
+  <script src="/register.js"></script>
+</body>
+</html>

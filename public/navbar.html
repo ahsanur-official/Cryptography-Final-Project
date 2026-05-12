@@ -1,0 +1,207 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <div class="navbar-brand">
+      <a href="/" class="navbar-logo">🔐 Crypto Chat</a>
+    </div>
+    
+    <button class="navbar-toggle" id="navbarToggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    
+    <div class="navbar-menu" id="navbarMenu">
+      <div class="navbar-links">
+        <a href="/" class="nav-link" data-page="login">Login</a>
+        <a href="/register.html" class="nav-link" data-page="register">Register</a>
+        <a href="/chat.html" class="nav-link" data-page="chat">Chat</a>
+        <a href="/proofs.html" class="nav-link" data-page="proofs">Proofs</a>
+        <a href="/settings.html" class="nav-link" data-page="settings">Settings</a>
+      </div>
+      
+      <div class="navbar-user" id="navbarUser" style="display: none;">
+        <span id="navbarUsername" class="user-badge"></span>
+        <button id="btnLogout" class="btn btn-soft navbar-logout">Logout</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<style>
+  .navbar {
+    position: sticky;
+    top: 0;
+    background: var(--card);
+    border-bottom: 1px solid var(--line);
+    backdrop-filter: blur(22px);
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .navbar-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+  }
+
+  .navbar-brand {
+    display: flex;
+    align-items: center;
+  }
+
+  .navbar-logo {
+    font-size: 1.4rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--cyan), var(--pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+  }
+
+  .navbar-logo:hover {
+    transform: scale(1.05);
+  }
+
+  .navbar-menu {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .navbar-links {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .nav-link {
+    padding: 10px 16px;
+    border-radius: 12px;
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+  }
+
+  .nav-link:hover {
+    background: rgba(53, 208, 255, 0.12);
+    border-color: rgba(53, 208, 255, 0.3);
+    color: var(--cyan);
+  }
+
+  .nav-link.active {
+    background: rgba(53, 208, 255, 0.2);
+    border-color: var(--cyan);
+    color: var(--cyan);
+  }
+
+  .navbar-user {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .user-badge {
+    padding: 8px 14px;
+    background: rgba(66, 225, 138, 0.15);
+    border: 1px solid rgba(66, 225, 138, 0.3);
+    border-radius: 12px;
+    color: var(--green);
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .navbar-logout {
+    padding: 10px 18px;
+    font-size: 0.9rem;
+  }
+
+  .navbar-toggle {
+    display: none;
+    flex-direction: column;
+    background: none;
+    border: none;
+    cursor: pointer;
+    gap: 5px;
+  }
+
+  .navbar-toggle span {
+    width: 25px;
+    height: 3px;
+    background: var(--cyan);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+  }
+
+  @media (max-width: 768px) {
+    .navbar-container {
+      height: 60px;
+    }
+
+    .navbar-logo {
+      font-size: 1.2rem;
+    }
+
+    .navbar-toggle {
+      display: flex;
+    }
+
+    .navbar-menu {
+      position: absolute;
+      top: 60px;
+      left: 0;
+      right: 0;
+      background: var(--card);
+      border-bottom: 1px solid var(--line);
+      flex-direction: column;
+      gap: 0;
+      padding: 12px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+
+    .navbar-menu.active {
+      max-height: 500px;
+    }
+
+    .navbar-links {
+      flex-direction: column;
+      width: 100%;
+      gap: 0;
+    }
+
+    .nav-link {
+      width: 100%;
+      border-radius: 8px;
+      padding: 12px;
+      text-align: left;
+    }
+
+    .navbar-user {
+      width: 100%;
+      flex-direction: column;
+      gap: 8px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+      margin-top: 12px;
+    }
+
+    .user-badge {
+      width: 100%;
+      text-align: center;
+    }
+
+    .navbar-logout {
+      width: 100%;
+    }
+  }
+</style>
