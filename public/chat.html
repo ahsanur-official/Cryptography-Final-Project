@@ -9,14 +9,41 @@
 <body>
   <div id="navbar-container"></div>
 
+  <!-- Hidden shell required by main.js to avoid null-reference crashes on this page -->
+  <div id="workspace" hidden>
+    <div id="authPanel" hidden>
+      <button id="btnRegister" type="button"></button>
+      <button id="btnLogin" type="button"></button>
+    </div>
+    <div id="messages"></div>
+    <div id="proofSummary"></div>
+    <button id="btnRefreshProofs" type="button"></button>
+  </div>
+
   <div class="chat-wrapper">
     <aside class="chat-sidebar">
       <div class="sidebar-header">
-        <h3 id="identityLabel">not signed in</h3>
-        <div class="status-pill status-green" id="connectionStatus">Online</div>
+        <h3 id="identityLabel">Demo Controls</h3>
+        <div class="status-pill status-green" id="connectionStatus">Demo</div>
       </div>
-      <div class="conversations-list" id="conversationsList">
-        <div class="empty-state">No conversations yet</div>
+      <div class="conversations-list" id="demoControls">
+        <div class="stack" style="padding:12px;">
+          <label>Party A username
+            <input id="demoAUsername" value="alice" readonly />
+          </label>
+          <label>Party B username
+            <input id="demoBUsername" value="bob" readonly />
+          </label>
+          <div style="display:flex; gap:8px; margin-top:8px;">
+            <button id="btnAutoRegister" class="btn">Auto Register Both</button>
+            <button id="btnAutoLoginBoth" class="btn btn-primary">Auto Login Both</button>
+          </div>
+          <div style="display:flex; gap:8px; margin-top:8px;">
+            <button id="btnClearKeys" class="btn btn-soft">Clear Keys</button>
+            <button id="btnOpenTwoParty" class="btn">Open Demo</button>
+          </div>
+          <div style="margin-top:12px;" class="small">Use these controls to quickly prepare the two-party demo. On mobile, panels will stack for readability.</div>
+        </div>
       </div>
       <div class="sidebar-footer">
         <a href="/proofs.html" class="proof-link-small">📊 Proofs</a>
@@ -30,21 +57,59 @@
           <p id="chatStatus" class="chat-status">Encrypted with AES-GCM + RSA-PSS</p>
         </div>
         <div class="status-pill status-blue">Secure</div>
+        <button id="toggleTwoParty" class="btn btn-soft" style="margin-left:12px;">Two-Party Demo</button>
       </div>
 
-      <div class="chat-messages" id="messages"></div>
+      <!-- Integrated Two-Party Panels -->
+      <div class="two-panel" style="grid-template-columns: 1fr 1fr; gap:16px; padding:12px;">
+        <section class="panel" id="panelA">
+          <h3>Party A</h3>
+          <div class="controls">
+            <input id="aUsername" placeholder="username (e.g. alice)" readonly />
+            <input id="aPassword" type="password" placeholder="password" />
+            <div style="display:flex; gap:8px;">
+              <button id="aRegister" class="btn">Register</button>
+              <button id="aLogin" class="btn btn-primary">Login</button>
+              <button id="aLogout" class="btn btn-soft">Logout</button>
+                <button id="aSettings" class="btn btn-soft">Settings</button>
+            </div>
+            <div class="small" id="aStatus">Not logged in</div>
+          </div>
 
-      <div class="chat-input-area">
-        <div class="receiver-meta" id="keysStatus">Generating keys...</div>
-        <div class="message-input-group" style="margin-bottom: 12px;">
-          <input id="toUsername" placeholder="Type a username to chat..." class="message-textarea" style="flex: 0.3; padding: 11px 14px; min-height: 44px;" />
-        </div>
-        <div class="message-input-group">
-          <textarea id="message" placeholder="Type a secure message..." class="message-textarea"></textarea>
-          <button id="btnSend" class="btn btn-primary btn-send">Send</button>
-        </div>
-        <div class="info-card" id="senderPreview" style="margin-top: 8px; font-size: 0.85rem; display: none;"></div>
+          <div class="messages" id="aMessages" style="height:360px; overflow:auto; margin-top:12px;"></div>
+
+          <div class="send-row">
+            <input id="aTo" placeholder="Recipient username" style="flex:1;" />
+            <input id="aText" placeholder="Message" style="flex:2;" />
+            <button id="aSend" class="btn btn-primary">Send</button>
+          </div>
+        </section>
+
+        <section class="panel" id="panelB">
+          <h3>Party B</h3>
+          <div class="controls">
+            <input id="bUsername" placeholder="username (e.g. bob)" readonly />
+            <input id="bPassword" type="password" placeholder="password" />
+            <div style="display:flex; gap:8px;">
+              <button id="bRegister" class="btn">Register</button>
+              <button id="bLogin" class="btn btn-primary">Login</button>
+              <button id="bLogout" class="btn btn-soft">Logout</button>
+                <button id="bSettings" class="btn btn-soft">Settings</button>
+            </div>
+            <div class="small" id="bStatus">Not logged in</div>
+          </div>
+
+          <div class="messages" id="bMessages" style="height:360px; overflow:auto; margin-top:12px;"></div>
+
+          <div class="send-row">
+            <input id="bTo" placeholder="Recipient username" style="flex:1;" />
+            <input id="bText" placeholder="Message" style="flex:2;" />
+            <button id="bSend" class="btn btn-primary">Send</button>
+          </div>
+        </section>
       </div>
+
+      <script src="/two-party.js"></script>
     </div>
   </div>
 
@@ -93,6 +158,7 @@
       }
       
       await initializeSession(auth);
+
     });
   </script>
 </body>

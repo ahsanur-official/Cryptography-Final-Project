@@ -22,6 +22,83 @@ async function loadSettings(auth) {
   document.getElementById('settingsRole').textContent = auth.role || 'User';
 }
 
+async function editUsername() {
+  const auth = JSON.parse(localStorage.getItem('auth_session') || 'null');
+  if (!auth || !auth.token) {
+    showToast('You must be logged in to change username', 'warning');
+    return;
+  }
+
+  const currentUsername = auth.username;
+  const newUsername = prompt('Enter new username:', currentUsername);
+  if (newUsername === null) return;
+
+  const normalized = newUsername.trim();
+  if (!normalized) {
+    showToast('Username cannot be empty', 'warning');
+    return;
+  }
+  if (normalized === currentUsername) {
+    showToast('Username unchanged', 'info');
+    return;
+  }
+
+  try {
+    const response = await fetch('/api/profile/username', {
+      method: 'PUT',
+      headers: {
+        'content-type': 'application/json',
+        Authorization: `Bearer ${auth.token}`
+      },
+      body: JSON.stringify({ newUsername: normalized })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      showToast(data.error || 'Failed to update username', 'error');
+      return;
+    }
+
+    // migrate localStorage key material to the new username prefix
+    migrateCryptoKeys(currentUsername, normalized);
+
+    const updatedAuth = {
+      ...auth,
+      username: data.username,
+      token: data.token
+    };
+    localStorage.setItem('auth_session', JSON.stringify(updatedAuth));
+    localStorage.setItem('auth_token', data.token);
+
+    document.getElementById('settingsUsername').textContent = data.username;
+    showToast('Username updated successfully', 'success');
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 900);
+  } catch (err) {
+    showToast(`Username update error: ${err.message}`, 'error');
+  }
+}
+
+function migrateCryptoKeys(oldUsername, newUsername) {
+  const mappings = [
+    ['rsa_private_', 'rsa_private_'],
+    ['rsa_public_', 'rsa_public_'],
+    ['rsa_private_encrypt_', 'rsa_private_encrypt_'],
+    ['rsa_public_encrypt_', 'rsa_public_encrypt_']
+  ];
+
+  mappings.forEach(([prefix]) => {
+    const value = localStorage.getItem(`${prefix}${oldUsername}`);
+    if (value) {
+      localStorage.setItem(`${prefix}${newUsername}`, value);
+      localStorage.removeItem(`${prefix}${oldUsername}`);
+    }
+  });
+}
+
 async function loadKeysDisplay(username) {
   const signingKey = localStorage.getItem(`rsa_public_${username}`);
   const encryptionKey = localStorage.getItem(`rsa_public_encrypt_${username}`);

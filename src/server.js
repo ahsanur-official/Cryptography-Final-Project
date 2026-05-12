@@ -93,6 +93,23 @@ async function getPublicKey(username) {
   return memoryStore.publicKeys.find((item) => item.username === username) || null;
 }
 
+function getBearerToken(req) {
+  const header = req.headers.authorization || '';
+  const match = header.match(/^Bearer\s+(.+)$/i);
+  return match ? match[1] : null;
+}
+
+function requireAuth(req, res, next) {
+  const token = getBearerToken(req) || req.body.token;
+  if (!token) return res.status(401).json({ error: 'auth required' });
+  try {
+    req.user = jwt.verify(token, JWT_SECRET);
+    return next();
+  } catch (err) {
+    return res.status(401).json({ error: 'invalid token' });
+  }
+}
+
 // Simple user registration
 app.post('/api/register', async (req, res) => {
   const { username, password } = req.body;
@@ -148,6 +165,72 @@ app.post('/api/login', async (req, res) => {
     if (!ok) return res.status(400).json({ error: 'invalid credentials' });
     const token = jwt.sign({ uid: userId, username }, JWT_SECRET, { expiresIn: '7d' });
     res.json({ token, username, uid: userId });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'server error' });
+  }
+});
+
+app.put('/api/profile/username', requireAuth, async (req, res) => {
+  const { newUsername } = req.body;
+  const currentUsername = req.user.username;
+  const uid = req.user.uid;
+
+  if (!newUsername || !newUsername.trim()) {
+    return res.status(400).json({ error: 'newUsername is required' });
+  }
+
+  const normalizedNewUsername = newUsername.trim();
+  if (normalizedNewUsername === currentUsername) {
+    return res.status(400).json({ error: 'username unchanged' });
+  }
+
+  try {
+    if (db) {
+      const existingSnapshot = await db.collection('users').where('username', '==', normalizedNewUsername).get();
+      if (!existingSnapshot.empty) {
+        return res.status(409).json({ error: 'username already exists' });
+      }
+
+      const userRef = db.collection('users').doc(uid);
+      const userDoc = await userRef.get();
+      if (!userDoc.exists) {
+        return res.status(404).json({ error: 'user not found' });
+      }
+
+      await userRef.set({ username: normalizedNewUsername, updatedAt: new Date().toISOString() }, { merge: true });
+
+      const oldKeyRecord = await getPublicKey(currentUsername);
+      if (oldKeyRecord) {
+        await savePublicKey(normalizedNewUsername, {
+          signPublicKey: oldKeyRecord.signPublicKey,
+          encryptPublicKey: oldKeyRecord.encryptPublicKey
+        }, oldKeyRecord.publicKeyType || 'RSA');
+      }
+    } else {
+      if (memoryStore.users.some((user) => user.username === normalizedNewUsername)) {
+        return res.status(409).json({ error: 'username already exists' });
+      }
+
+      const userIndex = memoryStore.users.findIndex((user) => user.id === uid);
+      if (userIndex === -1) {
+        return res.status(404).json({ error: 'user not found' });
+      }
+
+      memoryStore.users[userIndex].username = normalizedNewUsername;
+      memoryStore.users[userIndex].updatedAt = new Date().toISOString();
+
+      const oldKeyRecord = await getPublicKey(currentUsername);
+      if (oldKeyRecord) {
+        await savePublicKey(normalizedNewUsername, {
+          signPublicKey: oldKeyRecord.signPublicKey,
+          encryptPublicKey: oldKeyRecord.encryptPublicKey
+        }, oldKeyRecord.publicKeyType || 'RSA');
+      }
+    }
+
+    const token = jwt.sign({ uid, username: normalizedNewUsername }, JWT_SECRET, { expiresIn: '7d' });
+    res.json({ ok: true, token, username: normalizedNewUsername, uid });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'server error' });

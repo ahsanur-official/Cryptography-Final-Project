@@ -98,6 +98,14 @@ textarea {
   margin-bottom: 18px;
 }
 
+.status-pill {
+  font-weight: 800;
+}
+
+.eyebrow {
+  color: var(--cyan);
+}
+
 .hero h1,
 .panel h2 {
   margin: 0;
@@ -901,3 +909,150 @@ textarea {
     justify-content: center;
   }
 }
+
+/* Mobile-friendly adjustments for chat/two-panel */
+@media (max-width: 920px) {
+  .chat-wrapper { grid-template-columns: 1fr; padding: 12px; }
+  .chat-sidebar { order: -1; margin-bottom: 12px; }
+  .chat-main { order: 0; }
+  .chat-main .two-panel { grid-template-columns: 1fr; gap:12px; padding:12px; }
+  .panel { min-height: auto; padding:12px; }
+  .send-row { flex-direction: column; }
+  .send-row input, .send-row button { width: 100%; }
+  .card-actions { justify-content: space-between; }
+  .card-action { flex: 1 1 48%; }
+  .card-action + .card-action { margin-left: 6px; }
+}
+
+/* Two-party card-style messages */
+.two-msg-card {
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  padding: 12px 14px;
+  border-radius: 12px;
+  margin: 10px 0;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.two-msg-card .card-top {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.card-sender {
+  font-weight:700;
+}
+.card-badge {
+  font-size:0.75rem;
+  padding:6px 10px;
+  border-radius:999px;
+  background: linear-gradient(135deg, var(--cyan), var(--pink));
+  color:#04111d;
+  font-weight:800;
+}
+.card-body {
+  color:var(--muted);
+  font-size:0.95rem;
+}
+.card-code {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+}
+.card-code .code-val {
+  background: rgba(0,0,0,0.3);
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.card-timestamp {
+  font-size:0.78rem;
+  color:var(--muted);
+}
+
+/* Align left/right for panels */
+.panel .two-msg-card.me { align-self: flex-end; background: linear-gradient(135deg, rgba(53,208,255,0.08), rgba(255,107,214,0.03)); }
+.panel .two-msg-card.peer { align-self: flex-start; }
+
+/* Two-panel overall layout when embedded in chat */
+.chat-main .two-panel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  padding: 18px;
+}
+
+.chat-main .panel {
+  padding: 18px;
+  min-height: 440px;
+}
+
+.panel h3 {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+.panel .controls {
+  display: grid;
+  gap: 8px;
+  align-items: center;
+}
+
+.panel .controls input[type="text"],
+.panel .controls input[type="password"],
+.panel .controls input,
+.panel .controls textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.03);
+  color: var(--text);
+}
+
+.panel .controls .btn-row {
+  display:flex;
+  gap:8px;
+}
+
+.send-row {
+  display:flex;
+  gap:8px;
+  margin-top:12px;
+  align-items:center;
+}
+
+.send-row input {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,0.03);
+}
+
+.send-row input[placeholder] { color: var(--muted); }
+
+.messages {
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(0,0,0,0.02));
+  border: 1px solid rgba(255,255,255,0.02);
+  padding: 12px;
+  border-radius: 12px;
+  min-height: 320px;
+  max-height: 420px;
+  overflow:auto;
+}
+
+/* Fix small text and spacing inside panels */
+.panel .small { font-size: 0.9rem; color: var(--muted); }
+
+/* Responsive adjustments */
+@media (max-width: 920px) {
+  .chat-main .two-panel { grid-template-columns: 1fr; }
+  .chat-main .panel { min-height: auto; }
+}
+
