@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Two-Party Demo - Crypto Chat</title>
+  <link rel="stylesheet" href="/style.css" />
+  <style>
+    .two-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; padding: 18px; }
+    .panel { border: 1px solid var(--line); background: var(--card); padding: 16px; border-radius: 12px; }
+    .panel h3 { margin: 0 0 12px 0; }
+    .panel .controls { display: grid; gap: 8px; margin-bottom: 12px; }
+    .messages { height: 320px; overflow-y: auto; border: 1px solid var(--line); padding: 8px; border-radius: 8px; background: rgba(255,255,255,0.02); }
+    .msg { margin: 6px 0; padding: 8px; border-radius: 8px; }
+    .msg.me { background: rgba(53,208,255,0.08); border: 1px solid rgba(53,208,255,0.12); }
+    .msg.peer { background: rgba(66,225,138,0.06); border: 1px solid rgba(66,225,138,0.12); }
+    .panel .send-row { display:flex; gap:8px; margin-top:8px; }
+    .small { font-size:0.85rem; color:var(--muted); }
+  </style>
+</head>
+<body>
+  <div id="navbar-container"></div>
+
+  <main>
+    <h1 style="text-align:center; margin-top:18px;">Two-Party Real-Time Demo</h1>
+    <p style="text-align:center; color:var(--muted);">Open this page to simulate two users (left = Sender A, right = Sender B) in the same browser.</p>
+
+    <div class="two-panel">
+      <section class="panel" id="panelA">
+        <h3>Party A</h3>
+        <div class="controls">
+          <input id="aUsername" placeholder="username (e.g. alice)" />
+          <input id="aPassword" type="password" placeholder="password" />
+          <div style="display:flex; gap:8px;">
+            <button id="aRegister" class="btn">Register</button>
+            <button id="aLogin" class="btn btn-primary">Login</button>
+            <button id="aLogout" class="btn btn-soft">Logout</button>
+          </div>
+          <div class="small" id="aStatus">Not logged in</div>
+        </div>
+
+        <div class="messages" id="aMessages"></div>
+
+        <div class="send-row">
+          <input id="aTo" placeholder="Recipient username" style="flex:1;" />
+          <input id="aText" placeholder="Message" style="flex:2;" />
+          <button id="aSend" class="btn btn-primary">Send</button>
+        </div>
+      </section>
+
+      <section class="panel" id="panelB">
+        <h3>Party B</h3>
+        <div class="controls">
+          <input id="bUsername" placeholder="username (e.g. bob)" />
+          <input id="bPassword" type="password" placeholder="password" />
+          <div style="display:flex; gap:8px;">
+            <button id="bRegister" class="btn">Register</button>
+            <button id="bLogin" class="btn btn-primary">Login</button>
+            <button id="bLogout" class="btn btn-soft">Logout</button>
+          </div>
+          <div class="small" id="bStatus">Not logged in</div>
+        </div>
+
+        <div class="messages" id="bMessages"></div>
+
+        <div class="send-row">
+          <input id="bTo" placeholder="Recipient username" style="flex:1;" />
+          <input id="bText" placeholder="Message" style="flex:2;" />
+          <button id="bSend" class="btn btn-primary">Send</button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script src="/navbar.js"></script>
+  <script src="/main.js"></script>
+  <script src="/two-party.js"></script>
+</body>
+</html>

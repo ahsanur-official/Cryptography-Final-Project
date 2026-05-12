@@ -53,10 +53,11 @@
 
     .hero-buttons {
       display: flex;
-      gap: 16px;
+      flex-direction: column;
+      gap: 14px;
       justify-content: center;
+      align-items: center;
       margin-bottom: 60px;
-      flex-wrap: wrap;
     }
 
     .btn-hero {
@@ -67,7 +68,7 @@
       font-size: 1rem;
       cursor: pointer;
       transition: all 0.3s ease;
-      min-width: 160px;
+      min-width: 220px;
     }
 
     .btn-primary-hero {
@@ -287,8 +288,7 @@
         Your messages are yours alone.
       </p>
       <div class="hero-buttons">
-        <button class="btn-hero btn-primary-hero" onclick="window.location.href='/login.html'">Sign In</button>
-        <button class="btn-hero btn-secondary-hero" onclick="window.location.href='/register.html'">Create Account</button>
+        <button class="btn-hero btn-primary-hero" onclick="window.location.href='/login.html'">Login</button>
       </div>
     </div>
   </section>
@@ -387,8 +387,7 @@
       <h2 class="cta-title">Ready to Chat Securely?</h2>
       <p class="cta-description">Join thousands of users who trust Crypto Chat for secure communication.</p>
       <div class="cta-buttons">
-        <button class="btn-hero btn-primary-hero" onclick="window.location.href='/register.html'">Get Started</button>
-        <button class="btn-hero btn-secondary-hero" onclick="window.location.href='/login.html'">Sign In</button>
+        <button class="btn-hero btn-primary-hero" onclick="window.location.href='/login.html'">Login</button>
       </div>
     </div>
   </section>
@@ -406,11 +405,23 @@
       navbarContainer.innerHTML = await navbarResponse.text();
       initializeNavbar();
       
-      // If already logged in, redirect to chat
+      // If already logged in, show an "Open Chat" button and hide the Login CTA
       const auth = JSON.parse(localStorage.getItem('auth_session') || 'null');
+      const heroButtons = document.querySelector('.hero-buttons');
+      const heroLogin = document.querySelector('.btn-primary-hero');
       if (auth && auth.token) {
-        // Optionally redirect, or allow viewing homepage
-        // window.location.href = '/chat.html';
+        if (heroLogin) heroLogin.style.display = 'none';
+        // create Open Chat button
+        if (heroButtons && !document.getElementById('openChatBtn')) {
+          const openBtn = document.createElement('button');
+          openBtn.id = 'openChatBtn';
+          openBtn.className = 'btn-hero btn-primary-hero';
+          openBtn.textContent = 'Open Chat';
+          openBtn.addEventListener('click', () => { window.location.href = '/chat.html'; });
+          heroButtons.insertBefore(openBtn, heroButtons.firstChild);
+        }
+      } else {
+        if (heroLogin) heroLogin.style.display = '';
       }
     });
   </script>

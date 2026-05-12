@@ -30,6 +30,11 @@ function initializeNavbar() {
     navbarUser.style.display = 'none';
   }
 
+  // Hide the Login nav link when user is logged in
+  const loginLink = document.querySelector('.nav-link[data-page="login"]');
+  if (loginLink) {
+    loginLink.style.display = (auth && auth.username) ? 'none' : '';
+  }
   // Logout handler
   if (btnLogout) {
     btnLogout.addEventListener('click', () => {
@@ -49,7 +54,7 @@ function updateActiveNavLink() {
   document.querySelectorAll('.nav-link').forEach(link => {
     link.classList.remove('active');
     if (link.href.includes(currentPage) || 
-        (currentPage === '/' && link.getAttribute('data-page') === 'login')) {
+        (currentPage === '/' && link.getAttribute('data-page') === 'home')) {
       link.classList.add('active');
     }
   });

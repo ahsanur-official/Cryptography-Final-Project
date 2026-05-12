@@ -12,8 +12,8 @@
     
     <div class="navbar-menu" id="navbarMenu">
       <div class="navbar-links">
+        <a href="/" class="nav-link" data-page="home">Home</a>
         <a href="/" class="nav-link" data-page="login">Login</a>
-        <a href="/register.html" class="nav-link" data-page="register">Register</a>
         <a href="/chat.html" class="nav-link" data-page="chat">Chat</a>
         <a href="/proofs.html" class="nav-link" data-page="proofs">Proofs</a>
         <a href="/settings.html" class="nav-link" data-page="settings">Settings</a>
@@ -78,6 +78,10 @@
     display: flex;
     gap: 8px;
     align-items: center;
+  }
+
+  .nav-link[data-page="home"] {
+    border-color: rgba(255, 255, 255, 0.14);
   }
 
   .nav-link {
