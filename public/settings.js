@@ -204,3 +204,12 @@ function logout() {
     window.location.href = '/';
   }, 1000);
 }
+
+window.editUsername = editUsername;
+window.editEmail = editEmail;
+window.editFullName = editFullName;
+window.changePassword = changePassword;
+window.toggleSetting = toggleSetting;
+window.downloadKeys = downloadKeys;
+window.clearKeys = clearKeys;
+window.logout = logout;

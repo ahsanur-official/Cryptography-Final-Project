@@ -60,6 +60,9 @@ function updateActiveNavLink() {
   });
 }
 
+window.initializeNavbar = initializeNavbar;
+window.updateActiveNavLink = updateActiveNavLink;
+
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', initializeNavbar);
 window.addEventListener('popstate', updateActiveNavLink);

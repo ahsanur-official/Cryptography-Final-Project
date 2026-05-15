@@ -63,6 +63,10 @@ style.textContent = `
   }
 `;
 document.head.appendChild(style);
+window.api = api;
+window.$ = $;
+window.createToastContainer = createToastContainer;
+window.showToast = showToast;
 
 let socket = null;
 let auth = null;

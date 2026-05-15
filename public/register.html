@@ -351,8 +351,7 @@
         </div>
 
         <div class="action-buttons">
-          <button class="btn btn-secondary" onclick="resetSenderForm()">Clear</button>
-          <button class="btn btn-primary" id="btnRegisterSender">Register Sender</button>
+          <button class="btn btn-secondary" type="button" id="btnClearSender">Clear Sender</button>
         </div>
       </div>
 
@@ -442,16 +441,20 @@
         </div>
 
         <div class="action-buttons">
-          <button class="btn btn-secondary" onclick="resetReceiverForm()">Clear</button>
-          <button class="btn btn-primary" id="btnRegisterReceiver">Register Receiver</button>
+          <button class="btn btn-secondary" type="button" id="btnClearReceiver">Clear Receiver</button>
         </div>
       </div>
+    </div>
+
+    <div class="register-action-bar">
+      <button class="btn btn-primary" id="btnRegisterBoth">Register Both Accounts</button>
+      <button class="btn btn-secondary" type="button" id="btnClearAll">Clear All</button>
     </div>
   </main>
 
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-  <script src="/navbar.js"></script>
-  <script src="/main.js"></script>
-  <script src="/register.js"></script>
+  <script type="module" src="/navbar.js"></script>
+  <script type="module" src="/main.js"></script>
+  <script type="module" src="/register.js"></script>
 </body>
 </html>

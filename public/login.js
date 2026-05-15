@@ -5,74 +5,88 @@ document.addEventListener('DOMContentLoaded', async () => {
   navbarContainer.innerHTML = await navbarResponse.text();
   initializeNavbar();
   
-  // If already logged in, redirect to chat
   const auth = JSON.parse(localStorage.getItem('auth_session') || 'null');
   if (auth && auth.token) {
     window.location.href = '/chat.html';
     return;
   }
-  
-  // Load saved username if "Remember me" was checked
-  const rememberMe = localStorage.getItem('rememberMe');
-  if (rememberMe) {
-    document.getElementById('loginUsername').value = rememberMe;
-    document.getElementById('rememberMe').checked = true;
+
+  const signInButton = document.getElementById('btnSignIn');
+  const clearAllButton = document.getElementById('btnClearAllLogin');
+  const senderClearButton = document.getElementById('btnSenderClear');
+  const receiverClearButton = document.getElementById('btnReceiverClear');
+
+  if (signInButton) {
+    signInButton.addEventListener('click', handleLogin);
+  }
+  if (clearAllButton) {
+    clearAllButton.addEventListener('click', clearAllLogin);
+  }
+  if (senderClearButton) {
+    senderClearButton.addEventListener('click', () => clearLoginForm('sender'));
+  }
+  if (receiverClearButton) {
+    receiverClearButton.addEventListener('click', () => clearLoginForm('receiver'));
   }
 });
 
-async function handleLogin(event) {
-  event.preventDefault();
-  
-  const username = document.getElementById('loginUsername').value.trim();
-  const password = document.getElementById('loginPassword').value;
-  const rememberMe = document.getElementById('rememberMe').checked;
-  
-  if (!username || !password) {
-    showToast('Please enter username and password', 'warning');
+async function handleLogin() {
+  const role = document.querySelector('input[name="loginRole"]:checked')?.value || 'sender';
+  const usernameInput = document.getElementById(`${role}LoginUsername`);
+  const passwordInput = document.getElementById(`${role}LoginPassword`);
+
+  if (!usernameInput || !passwordInput) {
+    showToast('Login fields are not available', 'error');
     return;
   }
-  
+
+  const username = usernameInput.value.trim();
+  const password = passwordInput.value;
+
+  if (!username || !password) {
+    showToast(`Please enter ${role} username and password`, 'warning');
+    return;
+  }
+
   try {
     const response = await api.login(username, password);
-    
     if (!response || !response.token) {
       showToast('Login failed: Invalid credentials', 'error');
       return;
     }
-    
-    // Save auth data
+
     const userDetails = {
       token: response.token,
       username: response.username,
       uid: response.uid,
       createdAt: new Date().toISOString()
     };
-    
+
     localStorage.setItem('auth_session', JSON.stringify(userDetails));
     localStorage.setItem('auth_token', response.token);
-    
-    // Save username if "Remember me" is checked
-    if (rememberMe) {
-      localStorage.setItem('rememberMe', username);
-    } else {
-      localStorage.removeItem('rememberMe');
-    }
-    
-    showToast(`✓ Welcome back, ${username}!`, 'success');
-    
+
+    showToast(`✓ Logged in as ${role} ${username}!`, 'success');
+
     setTimeout(() => {
       window.location.href = '/chat.html';
-    }, 1500);
-    
+    }, 1200);
   } catch (err) {
     console.error('Login error:', err);
     showToast(`Login failed: ${err.message}`, 'error');
   }
 }
 
-function clearLoginForm() {
-  document.getElementById('loginForm').reset();
-  document.getElementById('loginUsername').focus();
+function clearLoginForm(role) {
+  const usernameInput = document.getElementById(`${role}LoginUsername`);
+  const passwordInput = document.getElementById(`${role}LoginPassword`);
+  if (usernameInput) usernameInput.value = '';
+  if (passwordInput) passwordInput.value = '';
+  if (usernameInput) usernameInput.focus();
+}
+
+function clearAllLogin() {
+  clearLoginForm('sender');
+  clearLoginForm('receiver');
 }
 
 function handleForgotPassword(event) {

@@ -17,7 +17,15 @@
 
     .login-container {
       width: 100%;
-      max-width: 420px;
+      max-width: 1200px;
+      display: grid;
+      gap: 24px;
+    }
+
+    .login-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(280px, 1fr));
+      gap: 24px;
     }
 
     .login-panel {
@@ -25,7 +33,7 @@
       background: var(--card);
       backdrop-filter: blur(22px);
       border-radius: 24px;
-      padding: 48px 32px;
+      padding: 40px 32px;
       box-shadow: var(--shadow);
       animation: slideIn 0.5s ease;
     }
@@ -242,52 +250,75 @@
         <div class="login-header">
           <div class="login-logo">🔐</div>
           <h1>Welcome Back</h1>
-          <p>Sign in to your Crypto Chat account</p>
+          <p>Sign in as sender or receiver</p>
         </div>
 
         <div class="info-banner" style="margin-bottom: 18px;">
-          Sender and receiver usernames stay fixed after registration. Use Profile Settings after login to change a username.
+          Use the sender or receiver panel below to log in. Each side uses the same Crypto Chat authentication flow.
         </div>
+      </div>
 
-        <form id="loginForm" onsubmit="handleLogin(event)">
-          <div class="form-group">
-            <label for="loginUsername">Username</label>
-            <input
-              id="loginUsername"
-              type="text"
-              placeholder="Enter your username"
-              required
-              autocomplete="username"
-            />
+      <div class="login-grid">
+        <div class="login-panel">
+          <div class="login-header">
+            <div class="login-logo">📤</div>
+            <h1>Sender Login</h1>
+            <p>Access your sending account</p>
           </div>
 
           <div class="form-group">
-            <label for="loginPassword">Password</label>
-            <input
-              id="loginPassword"
-              type="password"
-              placeholder="Enter your password"
-              required
-              autocomplete="current-password"
-            />
+            <label for="senderLoginUsername">Username</label>
+            <input id="senderLoginUsername" type="text" placeholder="Enter sender username" autocomplete="username" />
           </div>
 
-          <div class="remember-forgot">
-            <label class="remember-me">
-              <input type="checkbox" id="rememberMe" />
-              <span>Remember me</span>
-            </label>
-            <a href="#" class="forgot-password" onclick="handleForgotPassword(event)">Forgot password?</a>
+          <div class="form-group">
+            <label for="senderLoginPassword">Password</label>
+            <input id="senderLoginPassword" type="password" placeholder="Enter password" autocomplete="current-password" />
           </div>
 
           <div class="form-actions">
-            <button type="submit" class="btn-login">Sign In</button>
-            <button type="button" class="btn-clear" onclick="clearLoginForm()">Clear</button>
+            <button type="button" class="btn-clear" id="btnSenderClear">Clear Sender</button>
           </div>
-        </form>
+        </div>
+
+        <div class="login-panel">
+          <div class="login-header">
+            <div class="login-logo">📥</div>
+            <h1>Receiver Login</h1>
+            <p>Access your receiving account</p>
+          </div>
+
+          <div class="form-group">
+            <label for="receiverLoginUsername">Username</label>
+            <input id="receiverLoginUsername" type="text" placeholder="Enter receiver username" autocomplete="username" />
+          </div>
+
+          <div class="form-group">
+            <label for="receiverLoginPassword">Password</label>
+            <input id="receiverLoginPassword" type="password" placeholder="Enter password" autocomplete="current-password" />
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn-clear" id="btnReceiverClear">Clear Receiver</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="login-panel">
+        <div class="form-group role-group">
+          <label>Login as</label>
+          <div class="role-options">
+            <label><input type="radio" name="loginRole" value="sender" checked /> Sender</label>
+            <label><input type="radio" name="loginRole" value="receiver" /> Receiver</label>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-login" id="btnSignIn">Sign In</button>
+          <button type="button" class="btn-clear" id="btnClearAllLogin">Clear All</button>
+        </div>
 
         <div class="divider">OR</div>
-
         <div class="register-link">
           <p>Don't have an account? <a href="/register.html">Create one here</a></p>
         </div>
@@ -300,8 +331,8 @@
     </div>
   </div>
 
-  <script src="/navbar.js"></script>
-  <script src="/main.js"></script>
-  <script src="/login.js"></script>
+  <script type="module" src="/navbar.js"></script>
+  <script type="module" src="/main.js"></script>
+  <script type="module" src="/login.js"></script>
 </body>
 </html>

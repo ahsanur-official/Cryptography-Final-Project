@@ -39,7 +39,9 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '..', 'public')));
+const staticDistPath = path.join(__dirname, '..', 'dist', 'public');
+const staticDir = fs.existsSync(staticDistPath) ? staticDistPath : path.join(__dirname, '..', 'public');
+app.use(express.static(staticDir));
 
 function getCollection(name) {
   return db ? db.collection(name) : null;
