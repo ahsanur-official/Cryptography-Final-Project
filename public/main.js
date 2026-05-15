@@ -342,14 +342,15 @@ async function initializeSession(session) {
   auth = session;
   $('identityLabel').textContent = session.username;
   $('connectionStatus').textContent = 'Online';
-  $('workspace').classList.remove('hidden');
-  $('authPanel').classList.add('hidden');
-  $('keysStatus').textContent = 'Generating RSA keys...';
+  $('workspace')?.classList.remove('hidden');
+  $('authPanel')?.classList.add('hidden');
+  const keysStatusEl = $('keysStatus');
+  if (keysStatusEl) keysStatusEl.textContent = 'Generating RSA keys...';
   
   showToast('🔑 Generating your RSA keypairs...', 'info');
   
   await ensureRsaKeys();
-  $('keysStatus').textContent = 'RSA public key published. AES-GCM + RSA-OAEP ready.';
+  if (keysStatusEl) keysStatusEl.textContent = 'RSA public key published. AES-GCM + RSA-OAEP ready.';
   
   showToast('✓ RSA-2048 keys generated and published', 'success');
 
@@ -423,62 +424,85 @@ async function initializeSession(session) {
 }
 
 window.addEventListener('load', () => {
-  $('btnRegister').addEventListener('click', async () => {
-    const username = $('username').value.trim();
-    const password = $('password').value;
-    if (!username || !password) {
-      showToast('Please enter username and password', 'warning');
-      return;
-    }
-    const response = await api.register(username, password);
-    if (response.token) {
-      await initializeSession({ token: response.token, username: response.username, uid: response.uid });
-      showToast(`Welcome ${response.username}! 🎉`, 'success');
-    } else {
-      showToast(response.error || 'Registration failed', 'error');
-    }
-  });
+  const btnRegisterEl = $('btnRegister');
+  const btnLoginEl = $('btnLogin');
+  const btnSendEl = $('btnSend');
+  const btnRefreshProofsEl = $('btnRefreshProofs');
+  const btnLogoutEl = $('btnLogout');
 
-  $('btnLogin').addEventListener('click', async () => {
-    const username = $('username').value.trim();
-    const password = $('password').value;
-    if (!username || !password) {
-      showToast('Please enter username and password', 'warning');
-      return;
-    }
-    const response = await api.login(username, password);
-    if (response.token) {
-      await initializeSession({ token: response.token, username: response.username, uid: response.uid });
-      showToast(`Logged in as ${response.username} ✓`, 'success');
-      $('authPanel').classList.add('compact');
-    } else {
-      showToast(response.error || 'Login failed', 'error');
-    }
-  });
-
-  $('btnSend').addEventListener('click', async () => {
-    try {
-      const recipientUsername = $('toUsername').value.trim();
-      if (!recipientUsername) {
-        showToast('Please enter a recipient username', 'warning');
+  if (btnRegisterEl) {
+    btnRegisterEl.addEventListener('click', async () => {
+      const username = $('username').value.trim();
+      const password = $('password').value;
+      if (!username || !password) {
+        showToast('Please enter username and password', 'warning');
         return;
       }
-      const plaintext = $('message').value.trim();
-      if (!plaintext) {
-        showToast('Message cannot be empty', 'warning');
+      const response = await api.register(username, password);
+      if (response.token) {
+        await initializeSession({ token: response.token, username: response.username, uid: response.uid });
+        showToast(`Welcome ${response.username}! 🎉`, 'success');
+      } else {
+        showToast(response.error || 'Registration failed', 'error');
+      }
+    });
+  }
+
+  if (btnLoginEl) {
+    btnLoginEl.addEventListener('click', async () => {
+      const username = $('username').value.trim();
+      const password = $('password').value;
+      if (!username || !password) {
+        showToast('Please enter username and password', 'warning');
         return;
       }
-      await sendSecureMessage(recipientUsername, plaintext, 'senderPreview', 'Sender');
-      $('message').value = '';
-      $('message').focus();
-      showToast(`Message encrypted and sent to ${recipientUsername} ✓`, 'success');
-    } catch (err) {
-      showToast(`Send failed: ${err.message}`, 'error');
-    }
-  });
+      const response = await api.login(username, password);
+      if (response.token) {
+        await initializeSession({ token: response.token, username: response.username, uid: response.uid });
+        showToast(`Logged in as ${response.username} ✓`, 'success');
+        $('authPanel')?.classList.add('compact');
+      } else {
+        showToast(response.error || 'Login failed', 'error');
+      }
+    });
+  }
 
-  $('btnRefreshProofs').addEventListener('click', async () => {
-    await refreshProofSummary();
-    showToast('Proofs refreshed', 'info');
-  });
+  if (btnSendEl) {
+    btnSendEl.addEventListener('click', async () => {
+      try {
+        const recipientUsername = $('toUsername').value.trim();
+        if (!recipientUsername) {
+          showToast('Please enter a recipient username', 'warning');
+          return;
+        }
+        const plaintext = $('message').value.trim();
+        if (!plaintext) {
+          showToast('Message cannot be empty', 'warning');
+          return;
+        }
+        await sendSecureMessage(recipientUsername, plaintext);
+        $('message').value = '';
+        $('message').focus();
+        showToast(`Message encrypted and sent to ${recipientUsername} ✓`, 'success');
+      } catch (err) {
+        showToast(`Send failed: ${err.message}`, 'error');
+      }
+    });
+  }
+
+  if (btnRefreshProofsEl) {
+    btnRefreshProofsEl.addEventListener('click', async () => {
+      await refreshProofSummary();
+      showToast('Proofs refreshed', 'info');
+    });
+  }
+
+  if (btnLogoutEl) {
+    btnLogoutEl.addEventListener('click', () => {
+      localStorage.removeItem('auth_session');
+      localStorage.removeItem('auth_token');
+      showToast('Logged out successfully', 'info');
+      window.location.href = '/';
+    });
+  }
 });

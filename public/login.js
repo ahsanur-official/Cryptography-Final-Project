@@ -59,6 +59,7 @@ async function handleLogin() {
       token: response.token,
       username: response.username,
       uid: response.uid,
+      role,
       createdAt: new Date().toISOString()
     };
 

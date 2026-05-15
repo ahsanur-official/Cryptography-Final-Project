@@ -9,134 +9,132 @@
 <body>
   <div id="navbar-container"></div>
 
-  <!-- Hidden shell required by main.js to avoid null-reference crashes on this page -->
-  <div id="workspace" hidden>
-    <div id="authPanel" hidden>
-      <button id="btnRegister" type="button"></button>
-      <button id="btnLogin" type="button"></button>
-    </div>
-    <div id="messages"></div>
-    <div id="proofSummary"></div>
-    <button id="btnRefreshProofs" type="button"></button>
-  </div>
-
   <div class="chat-wrapper">
     <aside class="chat-sidebar">
       <div class="sidebar-header">
-        <h3 id="identityLabel">Demo Controls</h3>
-        <div class="status-pill status-green" id="connectionStatus">Demo</div>
-      </div>
-      <div class="conversations-list" id="demoControls">
-        <div class="stack" style="padding:12px;">
-          <label>Party A username
-            <input id="demoAUsername" value="alice" readonly />
-          </label>
-          <label>Party B username
-            <input id="demoBUsername" value="bob" readonly />
-          </label>
-          <div style="display:flex; gap:8px; margin-top:8px;">
-            <button id="btnAutoRegister" class="btn">Auto Register Both</button>
-            <button id="btnAutoLoginBoth" class="btn btn-primary">Auto Login Both</button>
-          </div>
-          <div style="display:flex; gap:8px; margin-top:8px;">
-            <button id="btnClearKeys" class="btn btn-soft">Clear Keys</button>
-            <button id="btnOpenTwoParty" class="btn">Open Demo</button>
-          </div>
-          <div style="margin-top:12px;" class="small">Use these controls to quickly prepare the two-party demo. On mobile, panels will stack for readability.</div>
+        <div>
+          <div class="badge">Dashboard</div>
+          <h3 id="identityLabel">Loading...</h3>
+          <p class="chat-status" id="connectionStatus">Connecting...</p>
         </div>
       </div>
+
+      <div class="conversation-panel">
+        <div class="conversation-panel-title">Conversations</div>
+        <div class="conversations-list" id="conversationsList"></div>
+      </div>
+
       <div class="sidebar-footer">
-        <a href="/proofs.html" class="proof-link-small">📊 Proofs</a>
+        <button id="btnRefreshProofs" class="btn btn-secondary">Refresh proofs</button>
+        <div class="proof-summary" id="proofSummary">No proofs yet.</div>
       </div>
     </aside>
 
-    <div class="chat-main">
+    <main class="chat-main">
       <div class="chat-header">
         <div>
+          <div class="eyebrow">Encrypted Chat</div>
           <h2 id="chatWithLabel">Select a conversation</h2>
-          <p id="chatStatus" class="chat-status">Encrypted with AES-GCM + RSA-PSS</p>
+          <p id="chatStatus" class="chat-status">Telegram-style messenger with encrypted payloads.</p>
         </div>
-        <div class="status-pill status-blue">Secure</div>
-        <button id="toggleTwoParty" class="btn btn-soft" style="margin-left:12px;">Two-Party Demo</button>
+        <div class="header-actions">
+          <button class="btn btn-soft" id="btnLogout">Logout</button>
+        </div>
       </div>
 
-      <!-- Integrated Two-Party Panels -->
-      <div class="two-panel" style="grid-template-columns: 1fr 1fr; gap:16px; padding:12px;">
-        <section class="panel" id="panelA">
-          <h3>Party A</h3>
-          <div class="controls">
-            <input id="aUsername" placeholder="username (e.g. alice)" readonly />
-            <input id="aPassword" type="password" placeholder="password" />
-            <div style="display:flex; gap:8px;">
-              <button id="aRegister" class="btn">Register</button>
-              <button id="aLogin" class="btn btn-primary">Login</button>
-              <button id="aLogout" class="btn btn-soft">Logout</button>
-                <button id="aSettings" class="btn btn-soft">Settings</button>
-            </div>
-            <div class="small" id="aStatus">Not logged in</div>
-          </div>
-
-          <div class="messages" id="aMessages" style="height:360px; overflow:auto; margin-top:12px;"></div>
-
-          <div class="send-row">
-            <input id="aTo" placeholder="Recipient username" style="flex:1;" />
-            <input id="aText" placeholder="Message" style="flex:2;" />
-            <button id="aSend" class="btn btn-primary">Send</button>
-          </div>
-        </section>
-
-        <section class="panel" id="panelB">
-          <h3>Party B</h3>
-          <div class="controls">
-            <input id="bUsername" placeholder="username (e.g. bob)" readonly />
-            <input id="bPassword" type="password" placeholder="password" />
-            <div style="display:flex; gap:8px;">
-              <button id="bRegister" class="btn">Register</button>
-              <button id="bLogin" class="btn btn-primary">Login</button>
-              <button id="bLogout" class="btn btn-soft">Logout</button>
-                <button id="bSettings" class="btn btn-soft">Settings</button>
-            </div>
-            <div class="small" id="bStatus">Not logged in</div>
-          </div>
-
-          <div class="messages" id="bMessages" style="height:360px; overflow:auto; margin-top:12px;"></div>
-
-          <div class="send-row">
-            <input id="bTo" placeholder="Recipient username" style="flex:1;" />
-            <input id="bText" placeholder="Message" style="flex:2;" />
-            <button id="bSend" class="btn btn-primary">Send</button>
-          </div>
-        </section>
+      <div class="chat-messages" id="messages">
+        <div class="empty-state">Choose a conversation or type a recipient to begin.</div>
       </div>
 
-      <script src="/two-party.js"></script>
-    </div>
+      <div class="chat-input-area">
+        <div class="form-group">
+          <label for="toUsername" class="sr-only">Recipient username</label>
+          <input id="toUsername" class="message-input" placeholder="Recipient username (e.g. bob_receiver)" autocomplete="off" />
+        </div>
+        <div class="message-input-group">
+          <textarea id="message" class="message-textarea" placeholder="Type your secure message here..." rows="3"></textarea>
+          <button type="button" class="btn btn-primary btn-send" id="btnSend">Send</button>
+        </div>
+      </div>
+    </main>
   </div>
 
   <style>
     .chat-wrapper {
       display: grid;
-      grid-template-columns: 0.9fr 1.1fr;
-      gap: 20px;
-      padding: 20px;
+      grid-template-columns: 0.95fr 1.35fr;
+      gap: 24px;
+      padding: 24px;
       min-height: calc(100vh - 70px);
-      background: var(--bg-2);
+    }
+
+    .conversation-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 12px;
+    }
+
+    .conversation-panel-title {
+      color: var(--muted);
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .message-input {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      font-size: 0.95rem;
+    }
+
+    .message-input:focus {
+      border-color: rgba(53, 208, 255, 0.7);
+      box-shadow: 0 0 0 4px rgba(53, 208, 255, 0.12);
+    }
+
+    .proof-summary {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.5;
+      min-height: 4.2rem;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
     }
 
     @media (max-width: 1024px) {
       .chat-wrapper {
         grid-template-columns: 1fr;
       }
-
-      .chat-sidebar {
-        max-height: 300px;
-      }
     }
 
     @media (max-width: 760px) {
       .chat-wrapper {
-        padding: 12px;
-        gap: 12px;
+        padding: 16px;
+        gap: 16px;
       }
     }
   </style>
